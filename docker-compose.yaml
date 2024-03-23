@@ -1,0 +1,32 @@
+version: '3'
+
+networks:
+  my_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      my_network:
+        ipv4_address: 172.25.0.2  # Define the static IP address for the app service
+
+  cypress:
+    image: cypress/included:latest
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - app
+    environment:
+      - CYPRESS_baseUrl=http://172.25.0.2:3000  # Update the baseUrl to use the static IP address
+    networks:
+      - my_network
