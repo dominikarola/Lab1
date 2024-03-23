@@ -84,3 +84,5 @@ describe('Gallery Responsiveness Test', function() {
         cy.get('.swiper-button-prev').should('be.visible').click();
     });
 });
+
+//Kolejny test
